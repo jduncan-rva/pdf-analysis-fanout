@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Fanout Search & Deep Analysis</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-brand">
+                <div class="logo-badge">PDF</div>
+                <div>
+                    <h1>Document Fanout & Deep Analysis</h1>
+                    <p class="subtitle">Stage 1: Fast PyMuPDF Search &bull; Stage 2: Antigravity Multimodal Reasoning</p>
+                </div>
+            </div>
+            <div class="header-stats">
+                <div class="stat-pill"><span id="doc-count">0</span> Ingested Documents</div>
+            </div>
+        </header>
+
+        <!-- Search Bar -->
+        <section class="search-section">
+            <div class="search-wrapper">
+                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" id="search-input" placeholder="Search by institution, account number, keywords, or transaction details (BM25)..." autofocus>
+                <button id="clear-search-btn" class="clear-btn">&times;</button>
+            </div>
+        </section>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <div class="table-container">
+                <table class="doc-table">
+                    <thead>
+                        <tr>
+                            <th>Document</th>
+                            <th>Institution / Date</th>
+                            <th>Pages</th>
+                            <th>Status</th>
+                            <th>Search Match</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="docs-tbody">
+                        <tr>
+                            <td colspan="6" class="loading-state">Loading documents...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Details / Analysis Result Modal -->
+    <div id="modal-backdrop" class="modal-backdrop hidden">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <div>
+                    <h2 id="modal-title">Document Details</h2>
+                    <span id="modal-doc-id" class="doc-id-pill"></span>
+                </div>
+                <button id="modal-close-btn" class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <!-- Dynamic Content -->
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
