@@ -101,3 +101,75 @@ flowchart TD
 ### 10. Issue #10: Multi-Format Data Export & BigQuery Lakehouse Sync
 - **Agent Focus:** Adds CSV and Excel export endpoints with formatting, and an optional streaming sink into partitioned BigQuery tables.
 - **Scion Demo Value:** Demonstrates downstream analytics integration and enterprise data interoperability.
+
+---
+
+## 🚀 Delivered Demo Components & Session Achievements
+
+In this session, the foundational demo workflows, agent skills suite, telemetry pipeline, and Hub synchronization were implemented and verified end-to-end:
+
+### 1. Modular Scion Agent Skills Suite (`examples/pdf-analysis-fanout/skills/`)
+- **`pdf-layout-extractor`**: Layout structure parsing, chunk schema validation (`references/schema.json`), and PyMuPDF helper script (`scripts/extract_chunks.py`).
+- **`financial-reconciliation`**: Cross-document financial calculations, variance threshold categorization (`references/reconciliation-rules.md`), and markdown matrix templates (`templates/reconciliation-matrix.md`).
+- **`citation-auditor`**: Ground-truth claim auditing, hallucination detection, bracketed notation `[^doc:pXX]`, and citation style guide (`references/citation-style-guide.md`).
+- **`foreman-fanout-orchestration`**: Async non-blocking agent dispatch (`--notify`), worker state machines, error recovery, and resource reclamation (`references/coordination-protocol.md`).
+
+### 2. Multi-Agent Fleet Templates (`examples/pdf-analysis-fanout/templates/`)
+- **`pdf-foreman`**: Orchestrates fanout batches, manages worker lifecycles, mounts `foreman-fanout-orchestration` & `citation-auditor`.
+- **`pdf-extractor`**: Extracts layouts, text, and tables, mounts `pdf-layout-extractor`.
+- **`pdf-section-analyst`**: Evaluates chunks in parallel, mounts `pdf-layout-extractor`, `financial-reconciliation`, and `citation-auditor`.
+- **`pdf-auditor`**: Antigravity-powered cross-document synthesis, mounts `financial-reconciliation` and `citation-auditor`.
+- **`claude-pdf-auditor`**: Claude-on-Vertex cross-document audit lead, mounts `financial-reconciliation` and `citation-auditor`.
+
+### 3. Scion Metrics & Telemetry Subsystem
+- **Telemetry Configuration**: Configured `telemetry.hub.enabled: true` and `telemetry.local.console: true` across all agent templates and project `settings.yaml`.
+- **Operational Guide**: Created [`examples/pdf-analysis-fanout/METRICS_DEMO.md`](./examples/pdf-analysis-fanout/METRICS_DEMO.md) detailing hook capture, `MetricsPayload` schema, Hub database persistence, and REST aggregation endpoints.
+- **Executable Demo Script**: Created [`examples/pdf-analysis-fanout/scripts/demo_metrics.sh`](./examples/pdf-analysis-fanout/scripts/demo_metrics.sh) (`chmod +x`), which simulates session metrics, demonstrates `sciontool` JSON transmissions, and renders an aggregated terminal summary dashboard.
+
+### 4. Hub & Local Registry Synchronization
+- Pushed and synchronized all 9 templates across global and project scopes to the running Scion Hub:
+  ```text
+  TEMPLATE             LOCAL  HUB  STATUS
+  claude-pdf-auditor   yes    yes  synced (hash match)
+  docs-writer          yes    yes  synced (hash match)
+  instance-manager     yes    yes  synced (hash match)
+  pdf-auditor          yes    yes  synced (hash match)
+  pdf-extractor        yes    yes  synced (hash match)
+  pdf-foreman          yes    yes  synced (hash match)
+  pdf-section-analyst  yes    yes  synced (hash match)
+  release-notes        yes    yes  synced (hash match)
+  web-dev              yes    yes  synced (hash match)
+  ```
+
+### 5. Automated Validation & Quality Gates
+- Added unit test [`TestPDFFanoutTemplates_LoadAndValidate`](./pkg/config/templates_test.go) verifying that all templates parse cleanly, validate against the agnostic template schema, mount all required skills, and have telemetry enabled.
+
+### 6. Hosted GKE Cloud Monitoring & Metrics Dashboard Configuration
+- **Root Cause Resolution**: Resolved the Web UI `503 Service Unavailable` (`"Metrics dashboard is not configured (no telemetry project ID)"`) on GKE by supplying the GCP Telemetry project configuration.
+- **GKE Secrets & ConfigMap**:
+  - Configured `telemetry.cloud` (`gcp_project_id: gke-llm-testing-env`) in the `scion-hub-settings` Kubernetes Secret (`scion-system` namespace).
+  - Configured `SCION_TELEMETRY_GCP_PROJECT_ID` and `SCION_GCP_PROJECT_ID` in `scion-hub-env` ConfigMap.
+- **GCP IAM & Workload Identity**:
+  - Bound `roles/monitoring.viewer`, `roles/monitoring.metricWriter`, and `roles/logging.logWriter` to the GKE Hub runner service account (`scion-hub-runner@gke-llm-testing-env.iam.gserviceaccount.com`).
+### 7. Hosted Claude on Vertex AI Harness & GKE Execution
+- **Hub Scope Environment Storage**: Injected required Vertex AI environment variables (`GOOGLE_CLOUD_PROJECT`, `GOOGLE_CLOUD_REGION`, `GOOGLE_CLOUD_LOCATION`, `CLOUD_ML_REGION`, `CLAUDE_CODE_USE_VERTEX`, `ANTHROPIC_VERTEX_PROJECT_ID`) at `hub` scope with `always` injection mode via the Hub API.
+- **Container Image Build & Registry Deployment**:
+  - Updated `harnesses/claude/cloudbuild.yaml` with configurable architecture platform substitution `_PLATFORM` (defaulting to `linux/amd64`).
+  - Built and deployed `scion-claude:latest` to Google Artifact Registry (`us-central1-docker.pkg.dev/gke-llm-testing-env/scion/scion-claude:latest`).
+- **Live GKE Validation**: Verified that Claude agents (`claude-probe` with template `claude-pdf-auditor`) start cleanly on GKE with tmux, OpenTelemetry GCP cloud exporter, git workspace cloning, and Vertex AI authentication.
+
+### 8. Claude Harness Settings & Interactive Hook Sanitization (Claude Code 2.1 Compatibility)
+- **Problem & Symptoms**: Starting a Claude agent on GKE presented an interactive blocking TTY warning prompt (*"Settings Warning: /home/scion/.claude/settings.json"*), causing the agent process to stall waiting for user input:
+  - `hooks.ModelResponse`: Unknown hook event "ModelResponse" was ignored.
+  - `permissions.allow`: Invalid permission rule "*": Wildcard tool name "*" is not supported in allow rules.
+- **Root Cause**:
+  - Claude Code 2.1+ enforces strict validation on `settings.json`. Wildcard `*` in `permissions.allow` is rejected as invalid syntax (tool permission bypass in Scion is handled via the `--dangerously-skip-permissions` CLI flag).
+  - Claude Code does not support a `ModelResponse` hook event. Registering it triggered Claude Code's interactive configuration recovery menu.
+- **Resolution**:
+  - Updated `harnesses/claude/home/.claude/settings.json` to remove the invalid wildcard `allow` entry and `ModelResponse` hook registration while preserving strict `deny` rules and lifecycle status hooks (`SessionStart`, `SessionEnd`, `PreToolUse`, `PostToolUse`, `Stop`, `SubagentStop`, `UserPromptSubmit`, `Notification`).
+  - Synced the updated global Claude harness-config to the Hub (`scion harness-config install harnesses/claude --global`).
+  - Anchored root `.claude/` pattern in `.gitignore` to `/.claude/` to ensure harness template files remain properly tracked by git.
+- **Verification**: Verified that `claude-probe` starts cleanly on GKE with Claude Code v2.1.266 directly into the Vertex AI Opus interactive shell without warning prompts or stalls.
+
+
+

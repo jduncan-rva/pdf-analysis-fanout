@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "PDFDocumentChunk",
+  "type": "object",
+  "required": [
+    "document_id",
+    "chunk_id",
+    "page_start",
+    "page_end",
+    "section_title",
+    "content_markdown"
+  ],
+  "properties": {
+    "document_id": {
+      "type": "string",
+      "description": "Unique identifier of the source PDF document."
+    },
+    "chunk_id": {
+      "type": "string",
+      "description": "Unique identifier for this specific chunk (e.g., chunk_001)."
+    },
+    "page_start": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Starting page number (1-indexed)."
+    },
+    "page_end": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Ending page number (1-indexed, inclusive)."
+    },
+    "section_title": {
+      "type": "string",
+      "description": "Heading or logical section title of this segment."
+    },
+    "content_markdown": {
+      "type": "string",
+      "description": "Cleaned markdown text of the extracted section."
+    },
+    "tables": {
+      "type": "array",
+      "description": "Normalized data tables found within this chunk.",
+      "items": {
+        "type": "object",
+        "required": ["table_id", "headers", "rows"],
+        "properties": {
+          "table_id": { "type": "string" },
+          "caption": { "type": "string" },
+          "headers": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "rows": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "word_count": { "type": "integer" },
+        "has_tables": { "type": "boolean" },
+        "confidence_score": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    }
+  }
+}
