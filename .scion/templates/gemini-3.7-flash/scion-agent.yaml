@@ -13,19 +13,16 @@
 # limitations under the License.
 
 schema_version: "1"
-description: "Cross-document reconciliation and report synthesis powered by Claude on Vertex AI"
-default_harness_config: claude
+description: "Balanced multimodal reasoning and document analysis agent powered by Gemini 3.7 Flash"
+default_harness_config: antigravity
 user: scion
-model: large
+model: gemini-3.7-flash-medium
 agent_instructions: agents.md
 system_prompt: system-prompt.md
 
 env:
-  GOOGLE_CLOUD_PROJECT: "gke-llm-testing-env"
-  CLAUDE_CODE_USE_VERTEX: "1"
-  ANTHROPIC_VERTEX_PROJECT_ID: "gke-llm-testing-env"
-  CLOUD_ML_REGION: "us-east5"
-  ANTHROPIC_DEFAULT_OPUS_MODEL: "claude-opus-4-7"
+  GOOGLE_CLOUD_LOCATION: "global"
+  GOOGLE_CLOUD_REGION: "global"
   FARMTABLE_SERVER: "farmtable.scion-system.svc.cluster.local:8080"
   FARMTABLE_INSECURE: "1"
 
