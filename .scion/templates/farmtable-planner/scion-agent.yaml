@@ -1,9 +1,14 @@
 schema_version: "1"
 description: "Specialized Backlog Architect that decomposes requirements and seeds Farm Table DAGs"
 default_harness_config: antigravity
+user: scion
 model: large
 agent_instructions: agents.md
 system_prompt: system-prompt.md
+
+env:
+  FARMTABLE_SERVER: "farmtable.scion-system.svc.cluster.local:8080"
+  FARMTABLE_INSECURE: "1"
 
 telemetry:
   enabled: true

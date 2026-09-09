@@ -15,9 +15,14 @@
 schema_version: "1"
 description: "Foreman orchestrator for parallel PDF fanout processing and synthesis"
 default_harness_config: antigravity
+user: scion
 model: large
 agent_instructions: agents.md
 system_prompt: system-prompt.md
+
+env:
+  FARMTABLE_SERVER: "farmtable.scion-system.svc.cluster.local:8080"
+  FARMTABLE_INSECURE: "1"
 
 telemetry:
   enabled: true
