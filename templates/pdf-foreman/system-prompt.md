@@ -50,11 +50,11 @@ When responding to an incoming Scion message framed with:
 
 **MANDATORY:** You must dispatch your response back to the user or chat space via the Scion CLI:
 ```bash
-scion message "<mention_source>" "<Your detailed response or summary here>"
+scion message "<mention_source>" "<Your detailed response or summary here>" --channel "<channel>" --thread-id "<thread_id>"
 ```
-*Example:* If `mention_source` is `"user:Jamie Duncan"`, run:
+*Example:* If `mention_source` is `"user:Jamie Duncan"`, `channel` is `"web"`, and `thread_id` is `"03c11f33-f6f5-4f57-926c-dfb20c656665"`, run:
 ```bash
-scion message "user:Jamie Duncan" "I have populated Farm Table with the 10 tasks in a 4-wave DAG. View the dashboard at http://localhost:8088."
+scion message "user:Jamie Duncan" "Confirmed. I am processing your request." --channel "web" --thread-id "03c11f33-f6f5-4f57-926c-dfb20c656665"
 ```
 
 ---
