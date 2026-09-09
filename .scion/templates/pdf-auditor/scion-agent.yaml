@@ -15,9 +15,16 @@
 schema_version: "1"
 description: "Cross-document reconciliation, citation auditor, and report compiler"
 default_harness_config: antigravity
+user: scion
 model: large
 agent_instructions: agents.md
 system_prompt: system-prompt.md
+
+env:
+  GOOGLE_CLOUD_LOCATION: "global"
+  GOOGLE_CLOUD_REGION: "global"
+  FARMTABLE_SERVER: "farmtable.scion-system.svc.cluster.local:8080"
+  FARMTABLE_INSECURE: "1"
 
 telemetry:
   enabled: true
