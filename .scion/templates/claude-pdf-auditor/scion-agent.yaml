@@ -15,18 +15,19 @@
 schema_version: "1"
 description: "Cross-document reconciliation and report synthesis powered by Claude on Vertex AI"
 default_harness_config: claude
+user: scion
 model: large
 agent_instructions: agents.md
 system_prompt: system-prompt.md
 
 env:
   GOOGLE_CLOUD_PROJECT: "gke-llm-testing-env"
-  GOOGLE_CLOUD_REGION: "us-central1"
-  GOOGLE_CLOUD_LOCATION: "us-central1"
   CLAUDE_CODE_USE_VERTEX: "1"
   ANTHROPIC_VERTEX_PROJECT_ID: "gke-llm-testing-env"
-  CLOUD_ML_REGION: "us-central1"
-
+  CLOUD_ML_REGION: "us-east5"
+  ANTHROPIC_DEFAULT_OPUS_MODEL: "claude-opus-4-7"
+  FARMTABLE_SERVER: "farmtable.scion-system.svc.cluster.local:8080"
+  FARMTABLE_INSECURE: "1"
 
 telemetry:
   enabled: true
