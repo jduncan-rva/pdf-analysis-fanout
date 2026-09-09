@@ -1,0 +1,20 @@
+schema_version: "1"
+description: "Specialized Backlog Architect that decomposes requirements and seeds Farm Table DAGs"
+default_harness_config: antigravity
+model: large
+agent_instructions: agents.md
+system_prompt: system-prompt.md
+
+telemetry:
+  enabled: true
+  hub:
+    enabled: true
+    report_interval: "10s"
+  local:
+    enabled: true
+    console: true
+
+resources:
+  requests:
+    cpu: "500m"
+    memory: "1Gi"

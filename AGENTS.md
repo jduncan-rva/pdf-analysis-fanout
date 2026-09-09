@@ -101,10 +101,12 @@ This repository is linked to a Scion Hosted Hub as a registered project. LLM-bas
 - **Workspace Strategy:** Per-agent isolated clone (`clone-per-agent`).
 
 ### Interacting with Scion Agents:
+- **Web Chat Dashboard:** Navigate to `http://localhost:8080/chat` to access project spaces, collaborative threads, and 1-on-1 agent DMs.
 - **Check running agents:** `scion list --project "PDF Fanout Analysis Demo"`
 - **Inspect live agent terminal:** `scion look <agent-name> --project "PDF Fanout Analysis Demo"`
 - **Attach interactively:** `scion attach <agent-name> --project "PDF Fanout Analysis Demo"`
-- **Send instruction message:** `scion message <agent-name> "instruction" --project "PDF Fanout Analysis Demo"`
+- **Send instruction message:** `scion message @<agent-name> "instruction"`
+- **Full Chat Guide:** See [CHAT_INTERACTION_GUIDE.md](file:///Users/jamieduncan/Code/pdf-analysis-fanout/CHAT_INTERACTION_GUIDE.md) for full details on `@-mentions`, `ask_user` loops, rich diffs, and desktop federation via Google's A2A protocol.
 
 ---
 

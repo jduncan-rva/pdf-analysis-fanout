@@ -103,3 +103,15 @@ pip install -r requirements.txt
 python -m uvicorn app:app --reload --port 8000
 ```
 Open [http://localhost:8000](http://localhost:8000) in your browser.
+
+---
+
+## 💬 Scion Agent Chat & Multi-Agent Collaboration
+
+Autonomous agents (e.g. `@foreman1`, `@claude-probe`) operating in this repository can be directed and monitored in real time using Scion's **Native Web Chat**:
+
+- **Web Chat Dashboard:** Access project channels and agent DMs at [http://localhost:8080/chat](http://localhost:8080/chat) (via `kubectl port-forward svc/scion-hub 8080:8080 -n scion-system`).
+- **Addressing & Mentions:** Autocomplete and fan out tasks using `@<agent-name>` in thread composers or CLI (`scion message @foreman1 "..."`).
+- **Approval & Interactivity:** Respond directly to `ask_user` prompts to resume agents waiting on clarifications.
+- **Detailed Runbook:** Refer to [CHAT_INTERACTION_GUIDE.md](file:///Users/jamieduncan/Code/pdf-analysis-fanout/CHAT_INTERACTION_GUIDE.md) for full architecture, rich outputs, visibility filters, and A2A desktop federation setup.
+
